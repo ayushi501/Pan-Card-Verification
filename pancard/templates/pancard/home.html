@@ -1,0 +1,116 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pan Card Tampering Detection</title>
+    <link rel='stylesheet' href="{% static 'pancard/style.css' %}">
+</head>
+
+<body>
+    <h1 class="line1">PAN Card Tampering Detection</h1>
+    <p class="line2">Upload original and suspected tampered PAN card images to detect potential fraud</p>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="sec1">
+            <div class="subsec1" id="original">
+                <h3>
+                    <img id="image1" src="{% static 'pancard/tick_image.png' %}" alt="" height="35" width="30">
+                    Original PAN Card
+                </h3>
+                <p>
+                    Upload The aunthentic/original PAN card image
+                </p>
+                <div class="subsubsec1" id="orgsubsec1">
+                    <button class="button1"><img id="image2" src="{% static 'pancard/upload_image_green.png' %}" alt="Upload here" height="60"
+                            width="65"></button>
+                    <input type="file" class="fileinput" accept="image/*" name="original_image" required>
+                    <div class="fileinstructions">
+                        <span class="fileinstructionsl1" id="line3">Click to upload original image</span>
+                        <span class="fileinstructionsl2" id="line4">PNG, JPG up to 10 MB</span>
+                    </div>
+                    <div class="filedetails" hidden>
+                        <img class="preview" alt="Preview" hidden />
+                        <div class="imagedetails">
+                            <span class="filename" hidden></span>
+                            <button class="removebtn" hidden>❌</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="subsec1" id="suspected">
+                <h3>
+                    <img id="image3" src="{% static 'pancard/cross_image.png' %}" alt="" height="35" width="30">
+                    Suspected Tampered PAN Card
+                </h3>
+                <p>
+                    Upload the suspected tampered/fraudulent PAN card image
+                </p>
+                <div class="subsubsec1" id="sussubsec1">
+                    <button class="button1"><img id="image4" src="{% static 'pancard/upload_image_red.png' %}" alt="Upload here" height="60"
+                            width="65"></button>
+                    <input type="file" class="fileinput" accept="image/*" name="suspected_image" required>
+                    <div class="fileinstructions">
+                        <span class="fileinstructionsl1" id="line5">Click to upload suspected image</span>
+                        <span class="fileinstructionsl2" id="line6">PNG, JPG up to 10 MB</span>
+                    </div>
+                    <div class="filedetails" hidden>
+                        <img class="preview" alt="Preview" hidden />
+                        <div class="imagedetails">
+                            <span class="filename" hidden></span>
+                            <button class="removebtn" hidden>❌</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sec2">
+            <button type="submit" class="button2" id="submit-btn">Analyze For Tampering</button>
+            <button type="button" class="button2" id="reset-btn" onclick="resetForm()">Reset</button>
+        </div>
+    </form>
+    {% if result %}
+        <div class="analysis-result">
+            <div class="result-header {% if 'Tampered' in result %} error {% else %} success {% endif %}">
+                {% comment %} <span class="icon">{% if 'Tampered' in result %} ❌ {% else %} ✅ {% endif %}</span> {% endcomment %}
+                <h3>Analysis Results</h3>
+            </div>
+            <div class="result-box {% if 'Tampered' in result %} error-box {% else %} success-box {% endif %}">
+                {% if 'Tampered' in result %}
+                    <div class="result">⚠️ Tampering Detected</div>
+                {% else %}
+                    <div class="result">✅ No Tampering Detected</div>
+                {% endif %}
+            </div> 
+        </div>
+    {% endif %}
+    <div class="sec3">
+        <p class="line7">How to Use</p>
+        <ul class="subsec2">
+            <li>
+                <span class="step-number">1.</span>
+                <span class="step-text">Upload the <b>original/authentic PAN card</b> image in the green section.</span>
+            </li>
+            <li>
+                <span class="step-number">2.</span>
+                <span class="step-text">Upload the <b>suspected tampered PAN card</b> image in the red section.</span>
+            </li>
+            <li>
+                <span class="step-number">3.</span>
+                <span class="step-text">Click <b>"Analyze for Tampering"</b> to run the computer vision analysis.</span>
+            </li>
+            <li>
+                <span class="step-number">4.</span>
+                <span class="step-text">Review the detailed results showing <b>match status</b> and <b>detected
+                        issues</b>.</span>
+            </li>
+            </ol>
+    </div>
+    <script src="{% static 'pancard/script.js' %}" defer></script>
+</body>
+
+</html>
